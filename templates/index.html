@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+    <title>Главная</title>
+</head>
+<body>
+<main>
+<form action="/save/{{date}}" method="get">
+    <table>
+        <thead>
+        <tr>
+            <th>ФИО</th>
+            <th>{{date}}</th>
+        </tr>
+        <tbody>
+    {% for name_user in data_user %}
+        <tr>
+            <td>{{name_user[1]}}</td>
+            <td><input type="text" placeholder="отметка" name="id_{{name_user[0]}}"></td>
+        </tr>
+    {% endfor %}
+        </tbody>
+
+    </table>
+<input type="submit" value="0тправить">
+   </form>
+
+</main>
+</body>
+</html>
