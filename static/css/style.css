@@ -1,0 +1,25 @@
+main { width: 100%; color:white; background-color: black}
+#button{color:black; margin: 10px auto; display: block; width: 50%; font-size: 100%; height: 50px; background-color: orange;}
+.textInput {width: 30%; margin: auto; display: block; text-align: center;}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    background-color: black;
+}
+
+th, td {
+    border: 1px solid white;
+    color: white;
+    text-align: center;
+    }
+
+.number-buttons {
+            display: none;
+            position: absolute;
+            margin-top: 5px;
+            background-color:orange
+        }
+.number-buttons button {
+    margin: 2px;
+}

@@ -3,12 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="static/style.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <title>Главная</title>
+     <script>
+        function setDefaultValues() {
+            var inputs = document.querySelectorAll("input[type='text'], input[type='number'], input[type='email']");
+            inputs.forEach(function(input) {
+                if (input.value === "") {
+                    input.value = "None";
+                }
+            });
+        }
+    </script>
 </head>
 <body>
 <main>
-<form action="/save/{{date}}" method="get">
+<form action="/save/{{date}}" method="get" onsubmit="setDefaultValues()">
     <table>
         <thead>
         <tr>
@@ -19,15 +29,66 @@
     {% for name_user in data_user %}
         <tr>
             <td>{{name_user[1]}}</td>
-            <td><input type="text" placeholder="отметка" name="id_{{name_user[0]}}"></td>
+
+            <td><input  type="text" autocomplete="off"
+                       {% if name_user[2] != 'None' %}
+
+                       value="{{name_user[2]}}"
+                       {% else %}
+                       value=""
+                       {% endif %}
+                       name="id_{{name_user[0]}}"
+                class="textInput" onclick="showButtons(event, this)"></td>
         </tr>
     {% endfor %}
         </tbody>
 
     </table>
-<input type="submit" value="0тправить">
+<input id="button" type="submit" value="0тправить">
    </form>
 
 </main>
+
+<div id="numberButtons" class="number-buttons">
+        <button onclick="insertNumber(1)">1</button>
+        <button onclick="insertNumber(2)">2</button>
+        <button onclick="insertNumber(3)">3</button>
+        <button onclick="insertNumber(4)">4</button>
+        <button onclick="insertNumber(5)">5</button>
+        <button onclick="insertNumber(6)">6</button>
+        <button onclick="insertNumber(7)">7</button>
+        <button onclick="insertNumber(8)">8</button>
+        <button onclick="insertNumber(9)">9</button>
+        <button onclick="insertNumber(10)">10</button>
+        <button onclick="insertNumber('')">DEL</button>
+    </div>
+
+    <script>
+        let currentInput = null;
+
+        function showButtons(event, element) {
+            currentInput = element;
+            var buttons = document.getElementById('numberButtons');
+            buttons.style.display = 'block';
+            buttons.style.top = event.clientY +10
+             + 'px';
+            buttons.style.left = 20 + 'px';
+        }
+
+        function insertNumber(number) {
+            if (currentInput) {
+                currentInput.value = number;
+            }
+            var buttons = document.getElementById('numberButtons');
+            buttons.style.display = 'none';
+        }
+
+        document.addEventListener('click', function(event) {
+            var buttons = document.getElementById('numberButtons');
+            if (!event.target.matches('.textInput') && !event.target.matches('.number-buttons button')) {
+                buttons.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
