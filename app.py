@@ -1,3 +1,4 @@
+import json
 from flask import Flask, render_template, request
 import sqlite3
 from json import dumps
@@ -45,4 +46,35 @@ def save_page(date):
         cursor.execute(f'UPDATE UR_11 set {date}=(?) WHERE id={i[3:]}', [num])
         con.commit()
     return 'изменения приняты'
+
+@app.route('/get_stats/')
+def get_stat():
+    data = request.args
+    klass = data.get('klass')
+    name = data.get('name')
+    cursor.execute(F'SELECT * FROM {klass} WHERE name=(?)', [name])
+    data_stats = cursor.fetchall()[0]
+    list_stat = []
+    for i in data_stats[2:]:
+        if str(i).isdigit():
+            list_stat.append(int(i))
+    return json.dumps(list_stat)
+
+@app.route('/get_data_db/')
+def get_data_db():
+    req = json.loads(request.args.get('request'))
+    data = json.loads(request.args.get('data'))
+    if req.lower().startswith('update') or req.lower().startswith('delete'):
+        cursor.execute(req, data)
+        con.commit()
+        return json.dumps('ok')
+    else:
+        cursor.execute(req, data)
+        a=json.dumps(cursor.fetchall())
+
+        return a
+
+
+
+
 app.run()
