@@ -31,8 +31,7 @@ def get_page():
     klass = request.args.get('klass')
     cursor.execute(f'SELECT id, name,{date}  FROM {klass}')
     user_data = cursor.fetchall()
-    return render_template('index.html', date=date,
-                           data_user=user_data)
+    return render_template('index.html', date=date, klass=klass, data_user=user_data)
 
 
 
@@ -40,11 +39,12 @@ def get_page():
 @app.route('/save/<date>')
 def save_page(date):
     data = request.args
+    klass = data.get('klass')
     for i in data:
-        num = data.get(i)
-
-        cursor.execute(f'UPDATE UR_11 set {date}=(?) WHERE id={i[3:]}', [num])
-        con.commit()
+        if i != "klass":
+            num = data.get(i)
+            cursor.execute(f'UPDATE {klass} set {date}=(?) WHERE id={i[3:]}', [num])
+            con.commit()
     return 'изменения приняты'
 
 @app.route('/get_stats/')
@@ -52,7 +52,7 @@ def get_stat():
     data = request.args
     klass = data.get('klass')
     name = data.get('name')
-    cursor.execute(F'SELECT * FROM {klass} WHERE name=(?)', [name])
+    cursor.execute(f'SELECT * FROM {klass} WHERE name=(?)', [name])
     data_stats = cursor.fetchall()[0]
     list_stat = []
     for i in data_stats[2:]:
