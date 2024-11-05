@@ -23,7 +23,10 @@ FROM pragma_table_info('{klass}')
     if date not in list_data:
         return dumps([])
     index_date = list_data.index(date)
-    return dumps(list_data[index_date-10:index_date]+list_data[index_date:index_date+10])
+    start_index = index_date-10
+    if start_index < 0:
+        start_index = 0
+    return dumps(list_data[start_index:index_date]+list_data[index_date:index_date+10])
 
 @app.route('/date/')
 def get_page():
@@ -77,4 +80,4 @@ def get_data_db():
 
 
 
-app.run()
+app.run(debug=True)
