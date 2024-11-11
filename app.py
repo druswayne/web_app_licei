@@ -2,7 +2,8 @@ import json
 from flask import Flask, render_template, request
 import sqlite3
 from json import dumps
-con = sqlite3.connect('data.db',check_same_thread=False)
+
+con = sqlite3.connect('data.db', check_same_thread=False)
 cursor = con.cursor()
 app = Flask(__name__)
 
@@ -23,10 +24,11 @@ FROM pragma_table_info('{klass}')
     if date not in list_data:
         return dumps([])
     index_date = list_data.index(date)
-    start_index = index_date-10
+    start_index = index_date - 10
     if start_index < 0:
         start_index = 0
-    return dumps(list_data[start_index:index_date]+list_data[index_date:index_date+10])
+    return dumps(list_data[start_index:index_date] + list_data[index_date:index_date + 10])
+
 
 @app.route('/date/')
 def get_page():
@@ -35,8 +37,6 @@ def get_page():
     cursor.execute(f'SELECT id, name,{date}  FROM {klass}')
     user_data = cursor.fetchall()
     return render_template('index.html', date=date, klass=klass, data_user=user_data)
-
-
 
 
 @app.route('/save/<date>')
@@ -49,6 +49,7 @@ def save_page(date):
             cursor.execute(f'UPDATE {klass} set {date}=(?) WHERE id={i[3:]}', [num])
             con.commit()
     return 'изменения приняты'
+
 
 @app.route('/get_stats/')
 def get_stat():
@@ -63,6 +64,7 @@ def get_stat():
             list_stat.append(int(i))
     return json.dumps(list_stat)
 
+
 @app.route('/get_data_db/')
 def get_data_db():
     req = json.loads(request.args.get('request'))
@@ -73,9 +75,37 @@ def get_data_db():
         return json.dumps('ok')
     else:
         cursor.execute(req, data)
-        a=json.dumps(cursor.fetchall())
+        a = json.dumps(cursor.fetchall())
 
         return a
+
+
+@app.route('/get_qwest/', methods=['post'])
+def save_qwest():
+    text_qwest = request.form['question_text']
+    file_image = request.files.get('question_image')
+    if file_image:
+        file_image.save(f'/home/druswayne/mysite/static/uploads/{file_image.filename}')
+        url_file =  f'/static/uploads/{file_image.filename}'
+    else:
+        url_file = None
+    correct_answer = request.form['correct_answer']
+    option1 = request.form['option1']
+    option2 = request.form['option2']
+    option3 = request.form['option3']
+    option4 = request.form['option4']
+    question_hint = request.form['question_hint']
+    data = {
+        "text": text_qwest,
+        "file_image":url_file,
+        "correct_answer": int(correct_answer[-1]),
+        "list_option": [option1, option2, option3, option4],
+        "question_hint" : question_hint
+
+    }
+    with open('/home/druswayne/mysite/static/qwest.json', 'w', encoding='utf-8') as file:
+        file.write(json.dumps(data))
+    return 'ok'
 
 
 

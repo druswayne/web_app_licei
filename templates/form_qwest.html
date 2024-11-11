@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма для вопроса</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 5px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+        }
+        .option input[type="radio"] {
+            margin-right: 5px;
+        }
+        .submit-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Форма для вопроса</h1>
+        <form action="/get_qwest/" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <div class="form-group">
+                <label for="question-text">Текст вопроса</label>
+                <input type="text" id="question-text" name="question_text" required>
+            </div>
+            <div class="form-group">
+                <label for="question-image">Картинка для вопроса</label>
+                <input type="file" id="question-image" name="question_image" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label>Варианты ответа</label>
+                <div class="options">
+                    <div class="option">
+                        <input type="radio" name="correct_answer" value="option0">
+                        <input type="text" name="option1" required>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="correct_answer" value="option1">
+                        <input type="text" name="option2" required>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="correct_answer" value="option2">
+                        <input type="text" name="option3" required>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="correct_answer" value="option3">
+                        <input type="text" name="option4" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="question-hint">Подсказка для вопроса</label>
+                <input type="text" id="question-hint" name="question_hint">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="submit-btn">Отправить</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
