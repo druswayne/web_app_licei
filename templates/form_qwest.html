@@ -48,10 +48,10 @@
 <body>
     <div class="form-container">
         <h1>Форма для вопроса</h1>
-        <form action="/get_qwest/" method="POST" enctype="multipart/form-data" autocomplete="off">
+        <form action="/get_qwest/" method="POST" enctype="multipart/form-data" >
             <div class="form-group">
                 <label for="question-text">Текст вопроса</label>
-                <input type="text" id="question-text" name="question_text" required>
+                <input type="text" id="question-text" name="question_text" required autocomplete="off">
             </div>
             <div class="form-group">
                 <label for="question-image">Картинка для вопроса</label>

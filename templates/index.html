@@ -27,10 +27,12 @@
             <th>{{date}}</th>
         </tr>
         <tbody>
+    {% set count = namespace(a=1) %}
     {% for name_user in data_user %}
-        <tr>
-            <td>{{name_user[1]}}</td>
 
+        <tr>
+            <td>{{count.a}}. {{name_user[1]}}</td>
+                {%set count.a = count.a + 1 %}
             <td><input  type="text" autocomplete="off"
                        {% if name_user[2] != 'None' %}
 
