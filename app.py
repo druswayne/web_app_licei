@@ -39,6 +39,42 @@ def get_page():
     return render_template('index.html', date=date, klass=klass, data_user=user_data)
 
 
+@app.route('/coin/')
+def set_coin():
+    date = request.args.get('date')
+    klass = request.args.get('klass')
+    cursor.execute(f'SELECT id, name,coin  FROM users')
+    user_data = cursor.fetchall()
+    return render_template('coin.html', date=date, klass=klass, data_user=user_data)
+
+@app.route('/table/')
+def get_table():
+    data_table = []
+    klass = request.args.get('klass')
+
+    cursor.execute(f"""
+        SELECT name
+    FROM pragma_table_info('{klass}')
+        """)
+    list_data = ['№','ФИО']
+    data = cursor.fetchall()
+    for i in data:
+        if i[0].startswith('date'):
+            list_data.append(i[0])
+    cursor.execute(f'SELECT * FROM {klass}')
+    user_data = cursor.fetchall()
+    for user in user_data:
+        data_table.append(user)
+    return render_template('table.html', data=data_table, top_data=list_data)
+
+
+@app.route('/save_table/')
+def save_table():
+    data = request.args
+    for i in data:
+        print(type(i))
+    return data
+
 @app.route('/save/<date>')
 def save_page(date):
     data = request.args
@@ -47,6 +83,19 @@ def save_page(date):
         if i != "klass":
             num = data.get(i)
             cursor.execute(f'UPDATE {klass} set {date}=(?) WHERE id={i[3:]}', [num])
+            con.commit()
+    return 'изменения приняты'
+
+
+@app.route('/save_coin/')
+def save_coin():
+    data = request.args
+    print(data)
+    for i in data:
+        if i != "klass" and i!='id_' and i!='id_None':
+            num = data.get(i)
+            print(i)
+            cursor.execute(f'UPDATE users set coin=(?) WHERE id={i[3:]}', [num])
             con.commit()
     return 'изменения приняты'
 

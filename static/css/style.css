@@ -11,7 +11,7 @@ table {
 th, td {
     border: 1px solid white;
     color: white;
-    text-align: center;
+
     }
 
 .number-buttons {
@@ -23,3 +23,4 @@ th, td {
 .number-buttons button {
     margin: 2px;
 }
+.username {text-align: left;}

@@ -18,31 +18,35 @@
 </head>
 <body>
 <main>
-<form action="/save/{{date}}" method="get" onsubmit="setDefaultValues()">
+<form action="/save_table/" method="get" onsubmit="setDefaultValues()">
     <p><input type="text" name="klass" value="{{klass}}"></p>
     <table>
         <thead>
         <tr>
-            <th>ФИО</th>
-            <th>{{date}}</th>
+            {% for name in top_data %}
+            <th>{{name}}</th>
+            {% endfor %}
         </tr>
         <tbody>
-    {% set count = namespace(a=1) %}
-    {% for name_user in data_user %}
 
-        <tr>
-            <td class="user_name">{{count.a}}. {{name_user[1]}}</td>
-                {%set count.a = count.a + 1 %}
+            {% for user in data %}
+            <tr>
+                <td class="user_id">{{user[0]}}</td>
+                <td class="user_name">{{user[1]}}</td>
+            {% for i in range(user|length-2) %}
             <td><input  type="text" autocomplete="off"
-                       {% if name_user[2] != 'None' %}
+                       {% if user[i+2] != 'None' %}
 
-                       value="{{name_user[2]}}"
+                       value="{{user[i+2]}}"
                        {% else %}
                        value=""
                        {% endif %}
-                       name="id_{{name_user[0]}}"
+                       name="id_{{user[1]}}_{{i+1}}"
                 class="textInput" onclick="showButtons(event, this)"></td>
-        </tr>
+            {% endfor %}
+
+
+            </tr>
     {% endfor %}
         </tbody>
 
