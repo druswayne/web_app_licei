@@ -65,15 +65,32 @@ def get_table():
     user_data = cursor.fetchall()
     for user in user_data:
         data_table.append(user)
-    return render_template('table.html', data=data_table, top_data=list_data)
+    return render_template('table.html', data=data_table, top_data=list_data, klass=klass)
 
 
 @app.route('/save_table/')
 def save_table():
+
+    klass = request.args.get('klass')
+
+    cursor.execute(f"""
+            SELECT name
+        FROM pragma_table_info('{klass}')
+            """)
+    data = cursor.fetchall()
+    list_data = []
+    for i in data:
+        if i[0].startswith('date'):
+            list_data.append(i[0])
     data = request.args
     for i in data:
-        print(type(i))
-    return data
+        if i != 'klass':
+            name = i.split('_')[1]
+            id_grade = int(i.split('_')[2])
+            grade = data.get(i)
+            cursor.execute(f"UPDATE {klass} set {list_data[id_grade - 1]} = (?) WHERE name=(?)",[grade, name])
+    con.commit()
+    return 'save ok'
 
 @app.route('/save/<date>')
 def save_page(date):
