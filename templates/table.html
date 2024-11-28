@@ -18,7 +18,7 @@
 </head>
 <body>
 <main>
-<form action="/save_table/" method="get" onsubmit="setDefaultValues()">
+<form action="/save_table/" method="POST" onsubmit="setDefaultValues()">
     <p><input type="text" name="klass" value="{{klass}}"></p>
     <table>
         <thead>
@@ -34,7 +34,8 @@
                 <td class="user_id">{{user[0]}}</td>
                 <td class="user_name">{{user[1]}}</td>
             {% for i in range(user|length-2) %}
-            <td><input  type="text" autocomplete="off"
+            <td><input
+                    type="text" autocomplete="off"
                        {% if user[i+2] != 'None' %}
 
                        value="{{user[i+2]}}"
@@ -42,7 +43,8 @@
                        value=""
                        {% endif %}
                        name="id_{{user[1]}}_{{i+1}}"
-                class="textInput" onclick="showButtons(event, this)"></td>
+                        placeholder="№{{user[0]}}"
+                class="textInput grade" onclick="showButtons(event, this)"></td>
             {% endfor %}
 
 

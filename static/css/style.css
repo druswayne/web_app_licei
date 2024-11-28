@@ -24,3 +24,7 @@ th, td {
     margin: 2px;
 }
 .username {text-align: left;}
+
+th:first-child, td:first-child { position: sticky; left: 0; background-color: black; /* Цвет фона для закрепленного столбца */ z-index: 2; }
+.grade{font-weight: bold; color:red}
+.grade::placeholder{color:grey; font-style:italic; font-weight: 200;}

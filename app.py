@@ -1,4 +1,5 @@
 import json
+
 from flask import Flask, render_template, request
 import sqlite3
 from json import dumps
@@ -68,10 +69,9 @@ def get_table():
     return render_template('table.html', data=data_table, top_data=list_data, klass=klass)
 
 
-@app.route('/save_table/')
+@app.route('/save_table/', methods=['POST'])
 def save_table():
-
-    klass = request.args.get('klass')
+    klass = request.form['klass']
 
     cursor.execute(f"""
             SELECT name
@@ -82,12 +82,12 @@ def save_table():
     for i in data:
         if i[0].startswith('date'):
             list_data.append(i[0])
-    data = request.args
+    data = request.form
     for i in data:
         if i != 'klass':
             name = i.split('_')[1]
             id_grade = int(i.split('_')[2])
-            grade = data.get(i)
+            grade = data[i]
             cursor.execute(f"UPDATE {klass} set {list_data[id_grade - 1]} = (?) WHERE name=(?)",[grade, name])
     con.commit()
     return 'save ok'
