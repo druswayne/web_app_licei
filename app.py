@@ -48,6 +48,7 @@ def set_coin():
     user_data = cursor.fetchall()
     return render_template('coin.html', date=date, klass=klass, data_user=user_data)
 
+
 @app.route('/table/')
 def get_table():
     data_table = []
@@ -57,15 +58,28 @@ def get_table():
         SELECT name
     FROM pragma_table_info('{klass}')
         """)
-    list_data = ['№','ФИО']
+    list_data = ['№', 'ФИО']
     data = cursor.fetchall()
     for i in data:
         if i[0].startswith('date'):
             list_data.append(i[0])
+    list_data.append('средний балл')
     cursor.execute(f'SELECT * FROM {klass}')
     user_data = cursor.fetchall()
     for user in user_data:
         data_table.append(user)
+    for j in range(len(data_table)):
+        sum = 0
+        count_ = 0
+        for i in range(2, len(data_table[j])):
+            if isinstance(data_table[j][i], int):
+                sum += data_table[j][i]
+                count_ += 1
+        try:
+            data_table[j] += (round(sum / count_, 2),)
+        except:
+            data_table[j] += (0,)
+
     return render_template('table.html', data=data_table, top_data=list_data, klass=klass)
 
 
@@ -88,9 +102,10 @@ def save_table():
             name = i.split('_')[1]
             id_grade = int(i.split('_')[2])
             grade = data[i]
-            cursor.execute(f"UPDATE {klass} set {list_data[id_grade - 1]} = (?) WHERE name=(?)",[grade, name])
+            cursor.execute(f"UPDATE {klass} set {list_data[id_grade - 1]} = (?) WHERE name=(?)", [grade, name])
     con.commit()
     return 'save ok'
+
 
 @app.route('/save/<date>')
 def save_page(date):
@@ -109,7 +124,7 @@ def save_coin():
     data = request.args
     print(data)
     for i in data:
-        if i != "klass" and i!='id_' and i!='id_None':
+        if i != "klass" and i != 'id_' and i != 'id_None':
             num = data.get(i)
             print(i)
             cursor.execute(f'UPDATE users set coin=(?) WHERE id={i[3:]}', [num])
@@ -152,7 +167,7 @@ def save_qwest():
     file_image = request.files.get('question_image')
     if file_image:
         file_image.save(f'/home/druswayne/mysite/static/uploads/{file_image.filename}')
-        url_file =  f'/static/uploads/{file_image.filename}'
+        url_file = f'/static/uploads/{file_image.filename}'
     else:
         url_file = None
     correct_answer = request.form['correct_answer']
@@ -163,17 +178,15 @@ def save_qwest():
     question_hint = request.form['question_hint']
     data = {
         "text": text_qwest,
-        "file_image":url_file,
+        "file_image": url_file,
         "correct_answer": int(correct_answer[-1]),
         "list_option": [option1, option2, option3, option4],
-        "question_hint" : question_hint
+        "question_hint": question_hint
 
     }
     with open('/home/druswayne/mysite/static/qwest.json', 'w', encoding='utf-8') as file:
         file.write(json.dumps(data))
     return 'ok'
-
-
 
 
 app.run(debug=True)
